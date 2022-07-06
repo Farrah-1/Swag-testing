@@ -2,10 +2,12 @@ package com.sparta.fw.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class SwagHomePage {
 
@@ -60,9 +62,12 @@ public class SwagHomePage {
         driver.findElement(facebookLink).click();
         return driver;
     }
-    public WebDriver goToLinkedinPage(){
+    public WebDriver goToLinkedinPage() {
         driver.findElement(linkedinLink).click();
         return driver;
+    }
+    public List<WebElement> getAllItems() {
+        return driver.findElements(By.className("inventory_item"));
     }
 
 }
