@@ -2,10 +2,12 @@ package com.sparta.fw.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class SwagCartPage {
 
@@ -22,7 +24,7 @@ public class SwagCartPage {
     }
     //interactions with other pages
 
-    public void continueShopping(){
+    public void clickContinueShopping(){
         driver.findElement(By.id("continue-shopping")).click();
     }
 
@@ -34,6 +36,12 @@ public class SwagCartPage {
         driver.findElement(By.id("checkout")).click();
         return new SwagCheckoutPage(driver);
     }
+
+    public SwagHomePage goToHomePage(){
+        driver.findElement(By.id("continue-shopping")).click();
+        return new SwagHomePage(driver);
+    }
+
     public void goToAboutPage(){
         driver.findElement(burgerMenuLink).click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
@@ -47,6 +55,12 @@ public class SwagCartPage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reset_sidebar_link")));
         driver.findElement(By.id("reset_sidebar_link")).click();
     }
+
+    public List<WebElement> cartItemAdded(){
+        return driver.findElements(By.className("cart_item"));
+    }
+
+
 
 
 }
