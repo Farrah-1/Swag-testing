@@ -30,7 +30,10 @@ public class SwagCartPage {
         driver.findElement(By.id("checkout")).click();
     }
 
-
+    public SwagCheckoutPage goToCheckoutPage(){
+        driver.findElement(By.id("checkout")).click();
+        return new SwagCheckoutPage(driver);
+    }
     public void goToAboutPage(){
         driver.findElement(burgerMenuLink).click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
