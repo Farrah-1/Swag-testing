@@ -19,6 +19,9 @@ public class SwagCheckoutOverviewPage {
     private By totalBeforeTax = new By.ByClassName("summary_subtotal_label");
     private By burgerMenuLink= new By.ById("react-burger-menu-btn");
     private By cartLink= new By.ByClassName("shopping_cart_link");
+    private By twitterLink= new By.ByClassName("social_twitter");
+    private By facebookLink= new By.ByClassName("social_facebook");
+    private By linkedinLink= new By.ByClassName("social_linkedin");
 
     public SwagCheckoutOverviewPage(WebDriver driver){
         this.driver = driver;
@@ -51,6 +54,19 @@ public class SwagCheckoutOverviewPage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reset_sidebar_link")));
         driver.findElement(By.id("reset_sidebar_link")).click();
+        return driver;
+    }
+
+    public WebDriver goToTwitterPage(){
+        driver.findElement(twitterLink).click();
+        return driver;
+    }
+    public WebDriver goToFacebookPage(){
+        driver.findElement(facebookLink).click();
+        return driver;
+    }
+    public WebDriver goToLinkedinPage() {
+        driver.findElement(linkedinLink).click();
         return driver;
     }
 
