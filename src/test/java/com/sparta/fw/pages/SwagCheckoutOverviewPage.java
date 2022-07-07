@@ -23,6 +23,8 @@ public class SwagCheckoutOverviewPage {
     private By facebookLink= new By.ByClassName("social_facebook");
     private By linkedinLink= new By.ByClassName("social_linkedin");
 
+    private By policyTerms = new By.ByXPath("//*[@id=\"page_wrapper\"]/footer/div/text()[3]");
+
     public SwagCheckoutOverviewPage(WebDriver driver){
         this.driver = driver;
 
@@ -67,6 +69,11 @@ public class SwagCheckoutOverviewPage {
     }
     public WebDriver goToLinkedinPage() {
         driver.findElement(linkedinLink).click();
+        return driver;
+    }
+
+    public WebDriver goToPoliciesTermsOfService(){
+        driver.findElement(policyTerms).click();
         return driver;
     }
 
