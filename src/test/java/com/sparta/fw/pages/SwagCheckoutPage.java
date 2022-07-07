@@ -1,5 +1,6 @@
 package com.sparta.fw.pages;
 
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -70,16 +71,20 @@ public class SwagCheckoutPage {
 
     public boolean checkFirstNameCanBeEntered(){
         driver.findElement(firstNameFieldLink).sendKeys("Testing");
+
         return driver.findElement(firstNameFieldLink).getAttribute("value").contains("Testing");
     }
 
     public boolean checkLastNameCanBeEntered(){
         driver.findElement(lastNameFieldLink).sendKeys("Testing");
+
         return driver.findElement(lastNameFieldLink).getAttribute("value").contains("Testing");
+
     }
 
     public boolean checkPostCodeCanBeEntered(){
         driver.findElement(postCodeFieldLink).sendKeys("Testing");
+
         return driver.findElement(postCodeFieldLink).getAttribute("value").contains("Testing");
     }
 
@@ -92,6 +97,7 @@ public class SwagCheckoutPage {
         String lastName = driver.findElement(lastNameFieldLink).getAttribute("class");
         String postCode = driver.findElement(postCodeFieldLink).getAttribute("class");
         System.out.println(firstName);
+
 
         return firstName.equals(errorClassName) || lastName.equals(errorClassName) || postCode.equals(errorClassName);
     }
