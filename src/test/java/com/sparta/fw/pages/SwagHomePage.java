@@ -16,9 +16,6 @@ public class SwagHomePage {
 
     private By burgerMenuLink= new By.ById("react-burger-menu-btn");
     private By cartLink= new By.ByClassName("shopping_cart_link");
-
-
-
     private By twitterLink= new By.ByClassName("social_twitter");
     private By facebookLink= new By.ByClassName("social_facebook");
     private By linkedinLink= new By.ByClassName("social_linkedin");
