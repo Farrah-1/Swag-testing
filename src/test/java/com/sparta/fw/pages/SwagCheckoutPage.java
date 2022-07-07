@@ -1,4 +1,5 @@
-package com.sparta.fw;
+package com.sparta.fw.pages;
+
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,8 +12,6 @@ import java.time.Duration;
 public class SwagCheckoutPage {
 
     private final WebDriver driver;
-    private final SwagCartPage cartPage;
-    private final SwagCheckoutOverviewPage checkoutOverviewPage;
     private final By burgerMenuLink= new By.ById("react-burger-menu-btn");
     private final By cancelButtonLink = new By.ById("cancel");
     private final By continueButtonLink = new By.ById("continue");
@@ -72,25 +71,33 @@ public class SwagCheckoutPage {
 
     public boolean checkFirstNameCanBeEntered(){
         driver.findElement(firstNameFieldLink).sendKeys("Testing");
-        return driver.findElement(firstNameFieldLink).getText().contains("Testing");
+
+        return driver.findElement(firstNameFieldLink).getAttribute("value").contains("Testing");
     }
 
     public boolean checkLastNameCanBeEntered(){
         driver.findElement(lastNameFieldLink).sendKeys("Testing");
-        return driver.findElement(lastNameFieldLink).getText().contains("Testing");
+
+        return driver.findElement(lastNameFieldLink).getAttribute("value").contains("Testing");
+
     }
 
     public boolean checkPostCodeCanBeEntered(){
         driver.findElement(postCodeFieldLink).sendKeys("Testing");
-        return driver.findElement(postCodeFieldLink).getText().contains("Testing");
+
+        return driver.findElement(postCodeFieldLink).getAttribute("value").contains("Testing");
     }
 
     public boolean checkEmptyFormCannotBeSubmitted(){
-        String firstName = String.valueOf(driver.findElement(firstNameFieldLink).getClass());
-        String lastName = String.valueOf(driver.findElement(lastNameFieldLink).getClass());
-        String postCode = String.valueOf(driver.findElement(postCodeFieldLink).getClass());
         driver.findElement(continueButtonLink).click();
         String errorClassName = "input_error form_input error";
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#checkout_info_container > div > form > div.checkout_info > div.error-message-container.error > h3")));
+        String firstName = driver.findElement(firstNameFieldLink).getAttribute("class");
+        String lastName = driver.findElement(lastNameFieldLink).getAttribute("class");
+        String postCode = driver.findElement(postCodeFieldLink).getAttribute("class");
+        System.out.println(firstName);
+
 
         return firstName.equals(errorClassName) || lastName.equals(errorClassName) || postCode.equals(errorClassName);
     }
