@@ -2,16 +2,16 @@ package com.sparta.fw;
 
 import com.sparta.fw.pages.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class AppTest 
 {
     private static WebDriver driver;
     private static SwagLoginPage loginPage;
-
     private static SwagHomePage homePage;
+
     private static SwagCheckoutPage checkoutPage;
     private SwagCheckoutOverviewPage checkoutOverviewPage;
     private SwagLoginPage swagLoginPage;
@@ -59,37 +59,51 @@ public class AppTest
         }
     }
     @Nested
-    @DisplayName("Tests for HOmepage")
+    @DisplayName("Tests for Homepage")
     class testsForHomePage {
+
+        @BeforeEach
+        @DisplayName("Login to homepage")
+        void setUp() {
+            homePage = loginPage.standardUser();
+        }
         @Test
         @DisplayName("Check All the Image Matches Item Title")
         void checkAllTheImagesMatchItemTitles() {
-            Assertions.assertTrue(homePage.itemImage);
+            Assertions.assertTrue(homePage.checkAllImagesMatchItemTitles());
+        }
+
+        @Test
+        @DisplayName("Check All the Image Matches Item Title")
+        void checkItemImageMatchesItemTitle() {
+            WebElement item = homePage.getItemElement("Backpack");
+            Assertions.assertTrue(homePage.checkImageMatchesItemTitle(item));
+        }
+
+
+        @Test
+        @DisplayName("Check all Item Titles Links To Item Page")
+        void checkAllItemTitlesLinkToCorrectPages() {
+            Assertions.assertTrue(homePage.checkAllItemTitlesLinkToCorrectItemPage());
         }
 
         @Test
         @DisplayName("Check Item Title Links To Item Page")
-        void checkItemTitleLinksToItemOage() {
-            Assertions.assertTrue(homePage.itemTitle);
+        void checkItemTitleLinkToCorrectPages() {
+            WebElement item = homePage.getItemElement("Onesie");
+            Assertions.assertTrue(homePage.checkItemTitleLinksToCorrectPage(item));
         }
 
-
+//        @Test
+//        @DisplayName("Check If we can remove Products in basket from Homepage ")
+//        void checkIfWeCanRemoveProductsInBasketFromHomePage() {
+//            Assertions.assertTrue(homePage.);
+//        }
+//
         @Test
-        @DisplayName("Check If we can remove Products in basket from Homepage ")
-        void checkIfWeCanRemoveProductsInBasketFromHomePage() {
-            Assertions.assertTrue(homePage.removeProduct);
-        }
-
-        @Test
-        @DisplayName("Check If the image Matches The Products")
-        void checkIfTheImageMatchesTheProduct() {
-            Assertions.assertTrue(homePage.imagedescription);
-        }
-
-        @Test
-        @DisplayName("Check If the price is right for The Products")
-        void checkIfTheIsRightForTheProduct() {
-            Assertions.assertTrue(homePage.productPrice);
+        @DisplayName("Check if all products have the correct price")
+        void checkAllProductsHaveTheCorrectPrice() {
+            Assertions.assertTrue(homePage.checkAllPricesForItemsAreCorrect());
         }
 
         @Test
