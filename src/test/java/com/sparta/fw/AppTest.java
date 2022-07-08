@@ -67,7 +67,6 @@ public class AppTest
     @Nested
     @DisplayName("Tests for Homepage")
     class testsForHomePage {
-
         @BeforeEach
         @DisplayName("Login to homepage")
         void setUp() {
@@ -79,26 +78,48 @@ public class AppTest
         void checkAllTheImagesMatchItemTitles() {
             Assertions.assertTrue(homePage.checkAllImagesMatchItemTitles());
         }
-
         @Test
-        @DisplayName("Check All the Image Matches Item Title")
+        @DisplayName("Check an item Image Matches Item Title")
         void checkItemImageMatchesItemTitle() {
             WebElement item = homePage.getItemElement("Backpack");
             Assertions.assertTrue(homePage.checkImageMatchesItemTitle(item));
         }
-
-
         @Test
-        @DisplayName("Check all Item Titles Links To Item Page")
-        void checkAllItemTitlesLinkToCorrectPages() {
-            Assertions.assertTrue(homePage.checkAllItemTitlesLinkToCorrectItemPage());
+        @DisplayName("Check correct number appears in cart badge for items added")
+        void checkCorrectNumberInCartBadge() {
+            homePage.addAllItemsToCart();
+            Assertions.assertTrue(homePage.checkCorrectCartNumberBadge(homePage.getAllItems().size()));
         }
-
         @Test
-        @DisplayName("Check Item Title Links To Item Page")
+        @DisplayName("Check that multiple of the same item can be added to the cart")
+        void checkMultipleOfSameItemCanBeAdded() {
+            WebElement jacket = homePage.getItemElement("Jacket");
+            homePage.addItemToCart(jacket, 3);
+            Assertions.assertTrue(homePage.checkCorrectCartNumberBadge(3));
+        }
+        //        @Test
+//        @DisplayName("Check all Item Titles Link To Item Page")
+//        void checkAllItemTitlesLinkToCorrectPages() {
+//            Assertions.assertTrue(homePage.checkAllItemTitlesLinkToCorrectItemPage());
+//        }
+        @Test
+        @DisplayName("Check an Item Title Links To Item Page")
         void checkItemTitleLinkToCorrectPages() {
             WebElement item = homePage.getItemElement("Onesie");
+            System.out.println(item.findElement(By.className("inventory_item_name")).getText());
             Assertions.assertTrue(homePage.checkItemTitleLinksToCorrectPage(item));
+        }
+
+        //        @Test
+//        @DisplayName("Check all item images link to item page")
+//        void checkAllItemImageLinkToItemPage() {
+//            Assertions.assertTrue(homePage.checkAllItemImagesLinkToCorrectItemPage());
+//        }
+        @Test
+        @DisplayName("Check an item image links to item page")
+        void checkAnItemImageLinksToItemPage() {
+            WebElement item = homePage.getItemElement("Jacket");
+            Assertions.assertTrue(homePage.checkItemImageLinksToCorrectPage(item));
         }
 
         //        @Test
@@ -112,48 +133,67 @@ public class AppTest
         void checkAllProductsHaveTheCorrectPrice() {
             Assertions.assertTrue(homePage.checkAllPricesForItemsAreCorrect());
         }
-
         @Test
-        @DisplayName("Check If the description Matches The Products")
-        void checkIfTheDescriptionMatchesTheProduct() {
-            Assertions.assertTrue(homePage.productdescription);
+        @DisplayName("Check if a product has the correct price")
+        void checkProductHasTheCorrectPrice() {
+            WebElement item = homePage.getItemElement("Light");
+            Assertions.assertTrue(homePage.checkPriceForItemIsCorrect(item));
         }
-
         @Test
-        @DisplayName("Check If the Home Page Link always takes us to Homepage")
-        void checkIfTheHomepageLinkAlwaysTakesUsToHomepage() {
-            Assertions.assertTrue(homePage.goToHomePage);
-        }
-
-        @Test
-        @DisplayName("Check to see if the products get sorted A-Z")
+        @DisplayName("Check to see if A-Z filter orders items correctly")
         void checkToSeeIfTheProductGetsSortedAtoZ() {
-            Assertions.assertTrue(homePage."a-z");
+            Assertions.assertTrue(homePage.checkFilterCorrectlyFiltersItemsAtoZ());
         }
-
         @Test
-        @DisplayName("Check to see if the products get sorted Z-A")
+        @DisplayName("Check to see if Z-A filter orders items correctly")
         void checkToSeeIfTheProductGetsSortedZtoA() {
-            Assertions.assertTrue(homePage."z-a");
+            Assertions.assertTrue(homePage.checkFilterCorrectlyFiltersItemsZtoA());
         }
-
         @Test
-        @DisplayName("Check to see if the products get sorted Low To high")
+        @DisplayName("Check to see if Low To high filer orders items correctly")
         void checkToSeeIfTheProductGetsSortedLowToHigh() {
-            Assertions.assertTrue(homePage."lowToHigh");
+            Assertions.assertTrue(homePage.checkFilterCorrectlyFiltersItemsLowToHigh());
         }
-
         @Test
-        @DisplayName("Check to see if the products get sorted High to Low")
+        @DisplayName("Check to see if High To Low filer orders items correctly")
         void checkToSeeIfTheProductGetsSortedHighToLow() {
-            Assertions.assertTrue(homePage."z-a");
+            Assertions.assertTrue(homePage.checkFilterCorrectlyFiltersItemsHighToLow());
         }
-
         @Test
-        @DisplayName("Check to see if the reset button works")
-        void checkToSeeIfTheResetButtonWorks() {
-            Assertions.assertTrue(homePage.goToResetAppState(homePage));
+        @DisplayName("Check to see if the reset button resets the whole page")
+        void checkToSeeIfTheResetButtonResetsThePage() {
+            homePage.addAllItemsToCart();
+            Assertions.assertTrue(homePage.checkResetAppStateResetsApp());
         }
+        @Test
+        @DisplayName("Check to see if the twitter icon links to the correct page")
+        void checkToSeeIfTheTwitterIconLinksToPage() {
+            Assertions.assertTrue(homePage.checkTwitterLinksToCorrectPage());
+        }
+        @Test
+        @DisplayName("Check to see if the facebook icon links to the correct page")
+        void checkToSeeIfTheFacebookIconLinksToPage() {
+            Assertions.assertTrue(homePage.checkFacebookLinksToCorrectPage());
+        }
+        @Test
+        @DisplayName("Check to see if the LinkedIn icon links to the correct page")
+        void checkToSeeIfTheLinkedInIconLinksToPage() {
+            Assertions.assertTrue(homePage.checkLinkedInLinksToCorrectPage());
+        }
+        @Test
+        @DisplayName("Check to see if About links to the correct page")
+        void checkToSeeIfTheAboutLinksToPage() {
+            Assertions.assertTrue(homePage.checkAboutLinksToCorrectPage());
+        }
+        @Test
+        @DisplayName("Check to see if Log Out links to the correct page")
+        void checkToSeeIfTheLogOutLinksToPage() {
+            Assertions.assertTrue(homePage.checkLogoutLinksToCorrectPage());
+        }
+        @Test
+        @DisplayName("Check to see if cart icon links to the correct page")
+        void checkToSeeIfTheCartIconLinksToPage() {
+            Assertions.assertTrue(homePage.checkCartLinksToCorrectPage());
     }
 
 
@@ -245,6 +285,12 @@ public class AppTest
             Assertions.assertTrue(homePage.);
         }
 
+    }
+
+
+    @AfterEach
+    void tearDown(){
+        driver.close();
     }
 
 

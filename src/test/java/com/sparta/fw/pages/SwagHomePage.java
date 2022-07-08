@@ -11,16 +11,15 @@ import java.time.Duration;
 import java.util.*;
 
 public class SwagHomePage {
+    private final WebDriver driver;
+    private final By burgerMenuLink = new By.ById("react-burger-menu-btn");
+    private final By cartLink = new By.ByClassName("shopping_cart_link");
 
-    private WebDriver driver;
-    private By burgerMenuLink= new By.ById("react-burger-menu-btn");
-    private By cartLink= new By.ByClassName("shopping_cart_link");
-
-    public SwagHomePage(WebDriver driver){
-        this.driver=driver;
+    public SwagHomePage(WebDriver driver) {
+        this.driver = driver;
     }
 
-    public SwagLoginPage goToLoginPage(){
+    public SwagLoginPage goToLoginPage() {
         driver.findElement(burgerMenuLink).click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logout_sidebar_link")));
@@ -28,7 +27,7 @@ public class SwagHomePage {
         return new SwagLoginPage(driver);
     }
 
-    public SwagCartPage goToCartPage(){
+    public SwagCartPage goToCartPage() {
         driver.findElement(cartLink).click();
         return new SwagCartPage(driver);
     }
@@ -41,16 +40,13 @@ public class SwagHomePage {
         WebElement returnedElement = null;
         for (WebElement itemElement : getAllItems()) {
             String itemTitle = itemElement.findElement(By.className("inventory_item_name")).getText();
-            if (itemTitle.toLowerCase().contains(item.toLowerCase())){
-                returnedElement = itemElement;
-            };
+            if (itemTitle.toLowerCase().contains(item.toLowerCase())) returnedElement = itemElement;
         }
         return returnedElement;
     }
 
     public boolean checkAllImagesMatchItemTitles() {
         boolean matches = false;
-
         for (WebElement item : getAllItems()) {
             if (checkImageMatchesItemTitle(item)) {
                 matches = true;
@@ -58,7 +54,6 @@ public class SwagHomePage {
                 matches = false;
                 break;
             }
-
         }
         return matches;
     }
@@ -67,14 +62,12 @@ public class SwagHomePage {
         WebElement imageElement = item.findElement(By.className("inventory_item_img"));
         String itemImageDescription = imageElement.findElement(By.className("inventory_item_img")).getAttribute("alt");
         String itemTitle = item.findElement(By.className("inventory_item_name")).getText();
-
         return itemTitle.equals(itemImageDescription);
     }
 
     public boolean checkAllPricesForItemsAreCorrect() {
         boolean matches = false;
         for (WebElement item : getAllItems()) {
-
             if (checkPriceForItemIsCorrect(item)) {
                 matches = true;
             } else {
@@ -88,7 +81,6 @@ public class SwagHomePage {
     public boolean checkPriceForItemIsCorrect(WebElement item) {
         String itemTitle = item.findElement(By.className("inventory_item_name")).getText();
         String itemPrice = item.findElement(By.className("inventory_item_price")).getText();
-
         return comparePriceToItemTitle(itemTitle, itemPrice);
     }
 
@@ -106,7 +98,6 @@ public class SwagHomePage {
     public boolean checkAllItemTitlesLinkToCorrectItemPage() {
         boolean matches = false;
         for (WebElement item : getAllItems()) {
-
             if (checkItemTitleLinksToCorrectPage(item)) {
                 matches = true;
             } else {
@@ -119,23 +110,24 @@ public class SwagHomePage {
 
     public boolean checkItemTitleLinksToCorrectPage(WebElement item) {
         WebElement itemElement = item.findElement(By.className("inventory_item_name"));
-        String itemTitle = item.getText();
+        String itemTitle = itemElement.getText();
+        System.out.println(itemTitle);
         itemElement.click();
         String itemPageUrl = driver.getCurrentUrl();
-
+        System.out.println(itemPageUrl);
         return compareUrlToItemTitle(itemTitle, itemPageUrl);
     }
 
     public boolean checkAllItemImagesLinkToCorrectItemPage() {
         boolean matches = false;
         for (WebElement item : getAllItems()) {
-
             if (checkItemImageLinksToCorrectPage(item)) {
                 matches = true;
             } else {
                 matches = false;
                 break;
             }
+            driver.navigate().back();
         }
         return matches;
     }
@@ -144,7 +136,6 @@ public class SwagHomePage {
         String itemTitle = item.findElement(By.className("inventory_item_name")).getText();
         item.findElement(By.className("inventory_item_img")).click();
         String itemPageUrl = driver.getCurrentUrl();
-
         return compareUrlToItemTitle(itemTitle, itemPageUrl);
     }
 
@@ -152,7 +143,7 @@ public class SwagHomePage {
         return switch (itemTitle) {
             case "Sauce Labs Backpack" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=4");
             case "Sauce Labs Bike Light" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=0");
-            case "Sauce Labs Bolt T-Shirt"-> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=1");
+            case "Sauce Labs Bolt T-Shirt" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=1");
             case "Sauce Labs Fleece Jacket" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=5");
             case "Sauce Labs Onesie" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=2");
             case "Test.allTheThings() T-Shirt (Red)" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=3");
@@ -166,8 +157,11 @@ public class SwagHomePage {
         }
     }
 
-    public void addItemToCart(WebElement item) {
-        item.findElement(By.className("btn_inventory")).click();
+    public void addItemToCart(WebElement item, int numberOfItems) {
+        while (numberOfItems > 0) {
+            item.findElement(By.className("btn_inventory")).click();
+            numberOfItems--;
+        }
     }
 
     public boolean checkCorrectCartNumberBadge(int numberItemsAdded) {
@@ -175,63 +169,53 @@ public class SwagHomePage {
         return Integer.parseInt(cartBadgeNumber) == numberItemsAdded;
     }
 
-    public boolean checkFilterCorrectlyFiltersItemsZtoA(){
+    public boolean checkFilterCorrectlyFiltersItemsZtoA() {
         driver.findElement(By.className("product_sort_container")).click();
         driver.findElement(By.cssSelector("#header_container > div.header_secondary_container > div.right_component > span > select > option:nth-child(2)")).click();
-
         ArrayList<String> itemName = new ArrayList<>();
-        for (WebElement item : getAllItems())  itemName.add(item.findElement(By.className("inventory_item_name")).getText());
-
+        for (WebElement item : getAllItems())
+            itemName.add(item.findElement(By.className("inventory_item_name")).getText());
         ArrayList<String> sortedList = new ArrayList<>(itemName);
         sortedList.sort(Collections.reverseOrder());
-
         return itemName.equals(sortedList);
     }
 
-    public boolean checkFilterCorrectlyFiltersItemsAtoZ(){
+    public boolean checkFilterCorrectlyFiltersItemsAtoZ() {
         driver.findElement(By.className("product_sort_container")).click();
         driver.findElement(By.cssSelector("#header_container > div.header_secondary_container > div.right_component > span > select > option:nth-child(1)")).click();
-
         return checkItemsOrderedAtoZ();
     }
 
-    public boolean checkFilterCorrectlyFiltersItemsLowToHigh(){
+    public boolean checkFilterCorrectlyFiltersItemsLowToHigh() {
         driver.findElement(By.className("product_sort_container")).click();
         driver.findElement(By.cssSelector("#header_container > div.header_secondary_container > div.right_component > span > select > option:nth-child(3)")).click();
-
         ArrayList<Double> itemPrices = new ArrayList<>();
         for (WebElement item : getAllItems()) {
             String itemPriceString = item.findElement(By.className("inventory_item_price")).getText().substring(1);
             itemPrices.add(Double.parseDouble(itemPriceString));
         }
-
         ArrayList<Double> sortedList = new ArrayList<>(itemPrices);
         Collections.sort(sortedList);
-
         return itemPrices.equals(sortedList);
     }
 
-    public boolean checkFilterCorrectlyFiltersItemsHighToLow(){
+    public boolean checkFilterCorrectlyFiltersItemsHighToLow() {
         driver.findElement(By.className("product_sort_container")).click();
         driver.findElement(By.cssSelector("#header_container > div.header_secondary_container > div.right_component > span > select > option:nth-child(4)")).click();
-
         ArrayList<Double> itemPrices = new ArrayList<>();
         for (WebElement item : getAllItems()) {
             String itemPriceString = item.findElement(By.className("inventory_item_price")).getText().substring(1);
             itemPrices.add(Double.parseDouble(itemPriceString));
         }
-
         ArrayList<Double> sortedList = new ArrayList<>(itemPrices);
         sortedList.sort(Collections.reverseOrder());
-
         return itemPrices.equals(sortedList);
     }
 
     public boolean checkTwitterLinksToCorrectPage() {
         driver.findElement(By.linkText("Twitter")).click();
         String currentHandle = driver.getWindowHandle();
-        Set<String> allHandles =  driver.getWindowHandles();
-
+        Set<String> allHandles = driver.getWindowHandles();
         for (String handle : allHandles) {
             if (!currentHandle.equals(handle)) driver.switchTo().window(handle);
         }
@@ -241,8 +225,7 @@ public class SwagHomePage {
     public boolean checkFacebookLinksToCorrectPage() {
         driver.findElement(By.linkText("Facebook")).click();
         String currentHandle = driver.getWindowHandle();
-        Set<String> allHandles =  driver.getWindowHandles();
-
+        Set<String> allHandles = driver.getWindowHandles();
         for (String handle : allHandles) {
             if (!currentHandle.equals(handle)) driver.switchTo().window(handle);
         }
@@ -252,12 +235,12 @@ public class SwagHomePage {
     public boolean checkLinkedInLinksToCorrectPage() {
         driver.findElement(By.linkText("LinkedIn")).click();
         String currentHandle = driver.getWindowHandle();
-        Set<String> allHandles =  driver.getWindowHandles();
-
+        Set<String> allHandles = driver.getWindowHandles();
         for (String handle : allHandles) {
             if (!currentHandle.equals(handle)) driver.switchTo().window(handle);
         }
-        return driver.getCurrentUrl().equals("https://www.linkedin.com/company/sauce-labs/");
+        System.out.println(driver.getCurrentUrl());
+        return driver.getCurrentUrl().contains("https://www.linkedin.com/company/sauce-labs/");
     }
 
     public boolean checkAboutLinksToCorrectPage() {
@@ -265,7 +248,6 @@ public class SwagHomePage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("about_sidebar_link")));
         driver.findElement(By.id("about_sidebar_link")).click();
-
         return driver.getCurrentUrl().equals("https://saucelabs.com/");
     }
 
@@ -274,7 +256,6 @@ public class SwagHomePage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logout_sidebar_link")));
         driver.findElement(By.id("logout_sidebar_link")).click();
-
         return driver.getCurrentUrl().equals("https://www.saucedemo.com/");
     }
 
@@ -285,13 +266,13 @@ public class SwagHomePage {
 
     public boolean checkResetAppStateResetsApp() {
         driver.findElement(By.id("react-burger-menu-btn")).click();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(4));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reset_sidebar_link")));
         driver.findElement(By.id("reset_sidebar_link")).click();
-
+        driver.findElement(By.id("react-burger-cross-btn")).click();
         boolean isAllReset = false;
         for (WebElement item : getAllItems()) {
-            if (checkRemoveButtonChangesToAdd(item) && checkCorrectCartNumberBadge(0) && checkItemsOrderedAtoZ()){
+            if (checkRemoveButtonChangesToAdd(item) && checkCorrectCartNumberBadge(0) && checkItemsOrderedAtoZ()) {
                 isAllReset = true;
             } else {
                 isAllReset = false;
@@ -308,8 +289,8 @@ public class SwagHomePage {
 
     public boolean checkItemsOrderedAtoZ() {
         ArrayList<String> itemName = new ArrayList<>();
-        for (WebElement item : getAllItems())  itemName.add(item.findElement(By.className("inventory_item_name")).getText());
-
+        for (WebElement item : getAllItems())
+            itemName.add(item.findElement(By.className("inventory_item_name")).getText());
         ArrayList<String> sortedList = new ArrayList<>(itemName);
         Collections.sort(sortedList);
         return itemName.equals(sortedList);
