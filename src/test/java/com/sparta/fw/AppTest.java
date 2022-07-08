@@ -1,9 +1,6 @@
 package com.sparta.fw;
 
-import com.sparta.fw.pages.SwagCartPage;
-import com.sparta.fw.pages.SwagCheckoutPage;
-import com.sparta.fw.pages.SwagHomePage;
-import com.sparta.fw.pages.SwagLoginPage;
+import com.sparta.fw.pages.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +13,8 @@ public class AppTest
 
     private static SwagHomePage homePage;
     private static SwagCheckoutPage checkoutPage;
+    private SwagCheckoutOverviewPage checkoutOverviewPage;
+    private SwagLoginPage swagLoginPage;
     @BeforeAll
     static void setupAll(){
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
@@ -138,12 +137,41 @@ public class AppTest
 
 
     @Nested
-    @DisplayName("Tests For CheckoutPage")
-    class testsForCheckoutPage {
+    @DisplayName("Tests For CheckoutOverviewPage")
+    class testsForCheckoutOverviewPage {
 
+        @Test
+        @DisplayName("Check if the total is to two Decimal places")
+        void checkIfTheTotalIsTotwoDecimalPlaces(){
+            Assertions.assertTrue(checkoutOverviewPage.);
+        }
+        @Test
+        @DisplayName("Check if we can change anything on the overview Page ")
+        void checkIfWeCanChangeAnythingOnTheOverviewPage(){
+            Assertions.assertTrue(checkoutOverviewPage.);
+        }
+        @Test
+        @DisplayName("Check to see if the total is correct")
+        void checkToSeeIfTheTotalIsCorrect(){
+            Assertions.assertTrue(checkoutOverviewPage.);
+        }
+        @Test
+        @DisplayName("Check to see if everything is correct according to selection")
+        void checkToSeeIfEverythingIsCorrectAccordingToSelection(){
+            Assertions.assertTrue(checkoutOverviewPage.);
+        }
 
     }
 
+    @Nested
+    @DisplayName("Tests For login Page")
+    class testForLoginPage{
+        @Test
+        @DisplayName("Check to see if we can login")
+        void checkToSeeIfWeCanLogin(){
+            Assertions.assertTrue(swagLoginPage.);
+        }
+    }
 
 
 
