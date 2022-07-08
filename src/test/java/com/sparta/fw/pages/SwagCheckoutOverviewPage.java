@@ -102,4 +102,14 @@ public class SwagCheckoutOverviewPage {
 //
 //    }
 
+    public  isTotalInTwoDecPlaces(){
+        String str = driver.findElement(total).toString();
+        int dec = str.substring(str.indexOf(".")).length() -1;
+        return;
+
+    }
+
+
+
+
 }
