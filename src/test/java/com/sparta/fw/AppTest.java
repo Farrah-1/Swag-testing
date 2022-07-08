@@ -2,7 +2,6 @@ package com.sparta.fw;
 
 import com.sparta.fw.pages.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -22,7 +21,7 @@ public class AppTest
 
     @BeforeEach
     void setup(){
-        driver = new ChromeDriver();
+        driver = DriverFactory.getDriver(DriverType.CHROME);
         loginPage = new SwagLoginPage(driver);
     }
     @Nested
