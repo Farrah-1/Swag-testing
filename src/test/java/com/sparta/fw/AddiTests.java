@@ -21,11 +21,6 @@ public class AddiTests {
     public static SwagLoginPage login;
     public static SwagHomePage homePage;
 
-    private String usernameStandard = "standard_user";
-    private String userNameLocked = "locked_out_user";
-    private String usernamePerformance = "performance_glitch_user";
-
-
     private void extracted() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver");
         driver = new ChromeDriver();
@@ -161,7 +156,7 @@ public class AddiTests {
 
     }
 
-    @DisplayName("Items in cart") //all pass
+    @DisplayName("Items in cart")
     @Nested
     class name{
 
@@ -169,7 +164,6 @@ public class AddiTests {
         @Test
         @DisplayName("Check that cartItemAdded returns the items added")
         public void checkThatCartItemAddedReturnsItemsAdded (){
-            //stuck - need to do from home page?? Same for the two below
             extracted();
             List<String> itemNames = new ArrayList<>();
             List<String> expectedItemNames = new ArrayList<>();
@@ -179,25 +173,14 @@ public class AddiTests {
             for (WebElement item : homePage.getAllItems()) {
                 item.findElement(By.className("btn_inventory")).click();
             }
-        //    homePage.goToCartPage();
+
             cart.cartItemAdded();
 
             for(WebElement itemInCart : cart.cartItemAdded()){
                 itemInCart.getAttribute("id");
                 System.out.println(itemInCart.getAttribute("id"));
-              //  String itemName = itemInCart.findElement(By.className("inventory_item_name")).getText();
-             //   itemNames.add(itemName);
+
             }
-
-        //    System.out.println(itemNames);
-
-
-         //   item_3_title_link
-          //          item_5_title_link
-
-
-
-
         }
 
         @Test
@@ -226,12 +209,14 @@ public class AddiTests {
             cart.removeItemsFromCart();
             Assertions.assertTrue(cart.checkCartIsEmpty());
         }
+
         @Test
         @DisplayName("Check that checkCartIsEmpty returns false if not empty")
         public void checkThatCheckCartIsEmptyReturnsFalseIfNotEmpty (){
             extracted();
+          //  homePage.addItemToCart();
             //add items to cart from cart thingy
-            Assertions.assertFalse(cart.checkCartIsEmpty());
+            Assertions.assertFalse(homePage.goToCartPage().checkCartIsEmpty());
         }
 
 
