@@ -13,13 +13,8 @@ import java.util.*;
 public class SwagHomePage {
 
     private WebDriver driver;
-
     private By burgerMenuLink= new By.ById("react-burger-menu-btn");
     private By cartLink= new By.ByClassName("shopping_cart_link");
-    private By twitterLink= new By.ByClassName("social_twitter");
-    private By facebookLink= new By.ByClassName("social_facebook");
-    private By linkedinLink= new By.ByClassName("social_linkedin");
-
 
     public SwagHomePage(WebDriver driver){
         this.driver=driver;
@@ -33,31 +28,11 @@ public class SwagHomePage {
         return new SwagLoginPage(driver);
     }
 
-    public WebDriver goToResetAppState(){
-        driver.findElement(burgerMenuLink).click();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reset_sidebar_link")));
-        driver.findElement(By.id("reset_sidebar_link")).click();
-        return driver;
-    }
-
     public SwagCartPage goToCartPage(){
         driver.findElement(cartLink).click();
         return new SwagCartPage(driver);
     }
 
-    public WebDriver goToTwitterPage(){
-        driver.findElement(twitterLink).click();
-        return driver;
-    }
-    public WebDriver goToFacebookPage(){
-        driver.findElement(facebookLink).click();
-        return driver;
-    }
-    public WebDriver goToLinkedinPage() {
-        driver.findElement(linkedinLink).click();
-        return driver;
-    }
     public List<WebElement> getAllItems() {
         return driver.findElements(By.className("inventory_item"));
     }
@@ -132,7 +107,7 @@ public class SwagHomePage {
         boolean matches = false;
         for (WebElement item : getAllItems()) {
 
-            if (checkItemLinksToCorrectPage(item)) {
+            if (checkItemTitleLinksToCorrectPage(item)) {
                 matches = true;
             } else {
                 matches = false;
@@ -142,7 +117,7 @@ public class SwagHomePage {
         return matches;
     }
 
-    public boolean checkItemLinksToCorrectPage(WebElement item) {
+    public boolean checkItemTitleLinksToCorrectPage(WebElement item) {
         WebElement itemElement = item.findElement(By.className("inventory_item_name"));
         String itemTitle = item.getText();
         itemElement.click();
@@ -151,7 +126,27 @@ public class SwagHomePage {
         return compareUrlToItemTitle(itemTitle, itemPageUrl);
     }
 
+    public boolean checkAllItemImagesLinkToCorrectItemPage() {
+        boolean matches = false;
+        for (WebElement item : getAllItems()) {
 
+            if (checkItemImageLinksToCorrectPage(item)) {
+                matches = true;
+            } else {
+                matches = false;
+                break;
+            }
+        }
+        return matches;
+    }
+
+    public boolean checkItemImageLinksToCorrectPage(WebElement item) {
+        String itemTitle = item.findElement(By.className("inventory_item_name")).getText();
+        item.findElement(By.className("inventory_item_img")).click();
+        String itemPageUrl = driver.getCurrentUrl();
+
+        return compareUrlToItemTitle(itemTitle, itemPageUrl);
+    }
 
     private static boolean compareUrlToItemTitle(String itemTitle, String itemPageUrl) {
         return switch (itemTitle) {
