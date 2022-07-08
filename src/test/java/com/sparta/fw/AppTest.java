@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class AppTest 
+public class AppTest
 {
     private static WebDriver driver;
     private static SwagLoginPage loginPage;
