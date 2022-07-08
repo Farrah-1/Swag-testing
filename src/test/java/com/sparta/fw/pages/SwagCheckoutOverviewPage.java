@@ -32,9 +32,9 @@ public class SwagCheckoutOverviewPage {
     public String getURL() {
         return driver.getCurrentUrl();
     }
-    public SwagCheckoutFinishPage goToCheckoutFinishPage(){
+    public SwagCheckoutCompletePage goToCheckoutFinishPage(){
         driver.findElement(finish).click();
-        return new SwagCheckoutFinishPage(driver);
+        return new SwagCheckoutCompletePage(driver);
     }
 
     public SwagLoginPage goToLoginPage(){
