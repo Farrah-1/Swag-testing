@@ -24,12 +24,6 @@ public class SwagCartPage {
 
     public SwagCartPage(WebDriver driver) {
         this.driver = driver;
-
-        driver.get("https://www.saucedemo.com/cart.html");
-        driver.findElement(By.id("user-name")).sendKeys(usernameStandard);
-        driver.findElement(By.id("password")).sendKeys(password);
-        driver.findElement(By.id("login-button")).click();
-        driver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();
     }
     //interactions with other pages
 
