@@ -1,7 +1,6 @@
 package com.sparta.fw.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,6 +13,8 @@ import java.util.List;
 public class SwagCartPage {
 
     private final WebDriver driver;
+
+    private SwagHomePage homePage;
     private String password = "secret_sauce";
     private String usernameStandard = "standard_user";
     private String userNameLocked = "locked_out_user";
@@ -29,7 +30,6 @@ public class SwagCartPage {
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.id("login-button")).click();
         driver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();
-
     }
     //interactions with other pages
 
@@ -46,9 +46,9 @@ public class SwagCartPage {
         driver.findElement(By.id("checkout")).click();
     }
 
-    public SwagCheckoutPage goToCheckoutPage() {
+    public SwagCheckoutCompletePage goToCheckoutPage() {
         driver.findElement(By.id("checkout")).click();
-        return new SwagCheckoutPage(driver);
+        return new SwagCheckoutCompletePage(driver);
     }
 
 
@@ -66,9 +66,47 @@ public class SwagCartPage {
         driver.findElement(By.id("reset_sidebar_link")).click();
     }
 
+    public void logout(){
+        driver.findElement(burgerMenuLink).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logout_sidebar_link")));
+        driver.findElement(By.id("logout_sidebar_link")).click();
+
+    }
+
     public List<WebElement> cartItemAdded() {
         return driver.findElements(By.className("cart_item"));
+
     }
+
+
+    //again, taken from Home page:
+    public boolean checkAllItemTitlesLinkToItemPage() {
+        boolean matches = false;
+        for (WebElement item : cartItemAdded()) {
+            WebElement itemElement = item.findElement(By.className("inventory_item_name"));
+            String itemTitle = item.getText();
+            itemElement.click();
+            String itemPageUrl = driver.getCurrentUrl();
+
+            matches = compareUrlToItemTitle(itemTitle, itemPageUrl);
+        }
+        return matches;
+    }
+
+    public boolean compareUrlToItemTitle(String itemTitle, String itemPageUrl) {
+        return switch (itemTitle) {
+            case "Sauce Labs Backpack" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=4");
+            case "Sauce Labs Bike Light" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=0");
+            case "Sauce Labs Bolt T-Shirt"-> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=1");
+            case "Sauce Labs Fleece Jacket" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=5");
+            case "Sauce Labs Onesie" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=2");
+            case "Test.allTheThings() T-Shirt (Red)" -> itemPageUrl.equals("https://www.saucedemo.com/inventory-item.html?id=3");
+            default -> false;
+        };
+    }
+
+
 
     public boolean checkAllItemsCorrectlyAddedToCart() {
         boolean addsCorrectly = false;
@@ -131,7 +169,7 @@ public class SwagCartPage {
 
 
 
-  public void removeItemFromCart(){
+  public void removeItemsFromCart(){
       for (WebElement element : cartItemAdded()) {
           String elementName = element.findElement(By.className("cart_quantity")).getText();
           String removeId = getRemoveId(elementName);
@@ -142,7 +180,19 @@ public class SwagCartPage {
 
 
     public boolean checkItemsRemovedFromCart() {
-        removeItemFromCart();
+        removeItemsFromCart();
+        boolean removeFromCart = false;
+        ArrayList<String> itemsQuantity = new ArrayList<>();
+        for (WebElement element : cartItemAdded()) {
+            itemsQuantity.add(element.findElement(By.className("cart_quantity")).getText());
+        }
+        if (itemsQuantity.size() ==0){
+            removeFromCart = true;
+        }
+        return removeFromCart;
+    }
+
+    public boolean checkCartIsEmpty(){
         boolean removeFromCart = false;
         ArrayList<String> itemsQuantity = new ArrayList<>();
         for (WebElement element : cartItemAdded()) {
@@ -163,9 +213,32 @@ public class SwagCartPage {
 
      */
 
+    public boolean checkAllPricesForItemsAreCorrect() {
+     //   goToHomePage();
+        homePage.getAllItems();
+        for (WebElement item : homePage.getAllItems()) {
+            item.findElement(By.className("btn_inventory")).click();
+        }
 
+        boolean matches = false;
+        for (WebElement item : cartItemAdded()) {
+            String itemTitle = item.findElement(By.className("inventory_item_name")).getText();
+            String itemPrice = item.findElement(By.className("inventory_item_price")).getText();
 
+            matches = comparePriceToItemTitle(itemTitle, itemPrice);
+        }
+        return matches;
+    }
 
-
+    public boolean comparePriceToItemTitle(String itemTitle, String itemPrice) {
+        return switch (itemTitle) {
+            case "Sauce Labs Backpack" -> itemPrice.equals("$29.99");
+            case "Sauce Labs Bike Light" -> itemPrice.equals("$9.99");
+            case "Sauce Labs Bolt T-Shirt", "Test.allTheThings() T-Shirt (Red)" -> itemPrice.equals("$15.99");
+            case "Sauce Labs Fleece Jacket" -> itemPrice.equals("$49.99");
+            case "Sauce Labs Onesie" -> itemPrice.equals("$7.99");
+            default -> false;
+        };
+    }
 }
 
