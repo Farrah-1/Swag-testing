@@ -2,6 +2,7 @@ package com.sparta.fw.pages;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -96,10 +97,41 @@ public class SwagCheckoutPage {
         String firstName = driver.findElement(firstNameFieldLink).getAttribute("class");
         String lastName = driver.findElement(lastNameFieldLink).getAttribute("class");
         String postCode = driver.findElement(postCodeFieldLink).getAttribute("class");
-        System.out.println(firstName);
-
 
         return firstName.equals(errorClassName) || lastName.equals(errorClassName) || postCode.equals(errorClassName);
+    }
+
+    public boolean checkJustFirstNameCannotBeSubmitted(){
+        driver.findElement(firstNameFieldLink).sendKeys("Testing");
+        driver.findElement(continueButtonLink).click();
+        String errorClassName = "input_error form_input error";
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#checkout_info_container > div > form > div.checkout_info > div.error-message-container.error > h3")));
+        String firstName = driver.findElement(firstNameFieldLink).getAttribute("class");
+
+        return firstName.equals(errorClassName);
+    }
+
+    public boolean checkJustLastNameCannotBeSubmitted(){
+        driver.findElement(lastNameFieldLink).sendKeys("Testing");
+        driver.findElement(continueButtonLink).click();
+        String errorClassName = "input_error form_input error";
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#checkout_info_container > div > form > div.checkout_info > div.error-message-container.error > h3")));
+        String lastName = driver.findElement(lastNameFieldLink).getAttribute("class");
+
+        return lastName.equals(errorClassName);
+    }
+
+    public boolean checkJustPostCodeCannotBeSubmitted(){
+        driver.findElement(postCodeFieldLink).sendKeys("Testing");
+        driver.findElement(continueButtonLink).click();
+        String errorClassName = "input_error form_input error";
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#checkout_info_container > div > form > div.checkout_info > div.error-message-container.error > h3")));
+        String postCode = driver.findElement(postCodeFieldLink).getAttribute("class");
+
+        return postCode.equals(errorClassName);
     }
 
     public boolean checkFilledFormCanBeSubmitted(){
@@ -107,6 +139,15 @@ public class SwagCheckoutPage {
         driver.findElement(lastNameFieldLink).sendKeys("Testing");
         driver.findElement(postCodeFieldLink).sendKeys("Testing");
         driver.findElement(continueButtonLink).click();
+
+        return driver.getCurrentUrl().equals("https://www.saucedemo.com/checkout-step-two.html");
+    }
+
+    public boolean checkEnterButtonClicksContinue(){
+        driver.findElement(firstNameFieldLink).sendKeys("Testing");
+        driver.findElement(lastNameFieldLink).sendKeys("Testing");
+        driver.findElement(postCodeFieldLink).sendKeys("Testing");
+        driver.findElement(postCodeFieldLink).sendKeys(Keys.ENTER);
 
         return driver.getCurrentUrl().equals("https://www.saucedemo.com/checkout-step-two.html");
     }
