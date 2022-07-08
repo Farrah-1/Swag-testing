@@ -43,4 +43,5 @@ driver.findElement(By.id("password")).sendKeys("secret_sauce");
         driver.findElement(homePageLink).click();
         return new SwagHomePage(driver);
     }
+
 }
