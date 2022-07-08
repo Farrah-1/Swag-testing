@@ -181,14 +181,28 @@ public class AppTest
     @DisplayName("Tests For login Page")
     class testForLoginPage{
         @Test
-        @DisplayName("Check to see if we can login")
-        void checkToSeeIfWeCanLogin(){
-            Assertions.assertTrue(swagLoginPage.);
+        @DisplayName("Check to see if we can login as Standard User")
+        void checkToSeeIfWeCanLoginAsStandardUser(){
+            loginPage.standardUser();
+            Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl());
         }
         @Test
-        @DisplayName("Check for Login TimeOut")
-        void checkForLoginTimeOut(){
-            Assertions.assertTrue(homePage.goToLoginPage());
+        @DisplayName("Check to see if we can login as LockedOut User")
+        void checkToSeeIfWeCanLoginAsLockedOutUser(){
+            loginPage.lockedOutUser();
+            Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl());
+        }
+        @Test
+        @DisplayName("Check to see if we can login as Problem User")
+        void checkToSeeIfWeCanLoginAsProblemUser(){
+            loginPage.problemUser();
+            Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl());
+        }
+        @Test
+        @DisplayName("Check to see if we can login as Performance User")
+        void checkToSeeIfWeCanLoginAsPerformanceUser(){
+            loginPage.performanceGlitchUser();
+            Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl());
         }
     }
     @Nested
@@ -205,10 +219,18 @@ public class AppTest
             Assertions.assertTrue(homePage);
         }
         @Test
-        @DisplayName("Check to see if we can open social Media links")
-        void checkToSeeIfWeCanOpenSocialMediaLinks(){
-            Assertions.assertTrue(homePage.goToFacebookPage()||homePage.goToLinkedinPage()||homePage.goToTwitterPage());
+        @DisplayName("Check to see if we can open Twitter link")
+        void checkToSeeIfWeCanOpenTwitterLink(){
+            homePage.goToTwitterPage();
+            Assertions.assertEquals("https://twitter.com/saucelabs",driver.getCurrentUrl());
         }
+        @Test
+        @DisplayName("Check to see if we can open Facebook link")
+        void checkToSeeIfWeCanOpenFacebookLink(){
+            homePage.goToFacebookPage();
+            Assertions.assertEquals("https://www.facebook.com/saucelabs",driver.getCurrentUrl());
+        }
+        
         @Test
         @DisplayName("Check to see if we can click on the terms and condition")
         void checkTpSeeIfWeCanClickOnTheTermsAndCondition(){
