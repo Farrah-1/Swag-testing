@@ -185,6 +185,36 @@ public class AppTest
         void checkToSeeIfWeCanLogin(){
             Assertions.assertTrue(swagLoginPage.);
         }
+        @Test
+        @DisplayName("Check for Login TimeOut")
+        void checkForLoginTimeOut(){
+            Assertions.assertTrue(homePage.goToLoginPage());
+        }
+    }
+    @Nested
+    @DisplayName("Tests for sidemenu")
+    class testsForSideMenu{
+        @Test
+        @DisplayName("Does the side menu open")
+        void checktoSeeIfTheSideMenuOpens(){
+            Assertions.assertTrue(homePage.);
+        }
+        @Test
+        @DisplayName("Check to see if sidemenu open links")
+        void checkToSeeIfSideMenuOpensUpALink(){
+            Assertions.assertTrue(homePage);
+        }
+        @Test
+        @DisplayName("Check to see if we can open social Media links")
+        void checkToSeeIfWeCanOpenSocialMediaLinks(){
+            Assertions.assertTrue(homePage.goToFacebookPage()||homePage.goToLinkedinPage()||homePage.goToTwitterPage());
+        }
+        @Test
+        @DisplayName("Check to see if we can click on the terms and condition")
+        void checkTpSeeIfWeCanClickOnTheTermsAndCondition(){
+            Assertions.assertTrue(homePage.);
+        }
+
     }
 
 
